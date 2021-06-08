@@ -1,29 +1,37 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useState } from 'react';
 import './App.css';
+import Header from './components/Header';
+import TodoCard from './components/TodoCard';
+import { todosData } from './data/Todos';
 
 function App():JSX.Element {
+  const [todos, setTodos] = useState(todosData);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit
+    <>
+      <section className="todoapp">
+        <Header todos={todos} setTodos={setTodos} />
+        <section className="main">
+          <input type="checkbox" id="toggle-all" className="toggle-all" />
+          <label htmlFor="toggle-all">Mark all as complete</label>
+          <ul className="todo-list">
+            {todos.map((todo) => <TodoCard key={todo.id} todo={todo} />)}
+          </ul>
+        </section>
+      </section>
+      <footer className="info">
+        <p>Double-click to edit a todo</p>
+        {/* <p>
+          Created by
           {' '}
-          <code>src/App.tsx</code>
-          {' '}
-          and save to reload.
+          <a href="http://github.com/remojansen/">Remo H. Jansen</a>
         </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+        <p>
+          Part of
+          {' '}
+          <a href="http://todomvc.com">TodoMVC</a>
+        </p> */}
+      </footer>
+    </>
   );
 }
 
