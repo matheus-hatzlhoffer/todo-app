@@ -1,26 +1,52 @@
 import React, { useState } from 'react';
 import { ITodo } from '../interfaces/TodoInterface';
 
-function TodoCard({ todo }:{todo:ITodo}):JSX.Element {
+interface props{
+  todo:ITodo;
+  editTodo: (id: number, value: string) => void
+  deleteTodo: (id: number) => void
+  editTodoStatus: (id:number) => void
+}
+
+function TodoCard({
+  todo, editTodo, deleteTodo, editTodoStatus,
+}:props):JSX.Element {
   const [state, setState] = useState('');
+
   const handleChange = ():void => {
-    if (state === 'completed') {
-      setState('');
-    } else {
+    if (state === '') {
       setState('completed');
+    } else {
+      setState('');
+    }
+    editTodoStatus(todo.id);
+  };
+  const handleDoubleClick = ():void => {
+    setState('editing');
+  };
+  const handleEdit = (e:React.ChangeEvent<HTMLInputElement>):void => {
+    editTodo(todo.id, e.target.value);
+  };
+  const handleKeyDown = (e:React.KeyboardEvent):void => {
+    if (e.key === 'Enter') {
+      setState('');
     }
   };
+  const handleDelete = ():void => {
+    deleteTodo(todo.id);
+  };
+
   return (
     <li key={todo.id} className={state}>
       <div className="view">
         <input type="checkbox" className="toggle" id="algo" onChange={handleChange} />
-        <label htmlFor="algo">
+        <label onDoubleClick={handleDoubleClick}>
           {' '}
           {todo.name}
         </label>
-        <button type="button" className="destroy" onClick={() => console.log('clicado')} />
+        <button type="button" className="destroy" onClick={handleDelete} />
       </div>
-      <input type="text" className="edit" value={todo.name} />
+      <input type="text" className="edit" value={todo.name} onChange={handleEdit} onKeyDown={handleKeyDown} />
     </li>
   );
 }

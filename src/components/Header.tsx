@@ -2,23 +2,25 @@ import React, { useState } from 'react';
 import { ITodo } from '../interfaces/TodoInterface';
 
 interface props{
-  todos:ITodo[];
-  setTodos:React.Dispatch<React.SetStateAction<ITodo[]>>
+  len:number;
+  addTodo:(todo: ITodo) => void
 }
 
-function Header({ todos, setTodos }:props):JSX.Element {
+function Header({ len, addTodo }:props):JSX.Element {
   const [todo, setTodo] = useState('');
+
   const handleKeyDown = (e:React.KeyboardEvent):void => {
     if (e.key === 'Enter') {
       const newTodo:ITodo = {
         name: todo,
         isCompleted: false,
-        id: todos.length,
+        id: len,
       };
-      setTodos([...todos, newTodo]);
+      addTodo(newTodo);
       setTodo('');
     }
   };
+
   return (
     <header className="header">
       <h1>todos</h1>
