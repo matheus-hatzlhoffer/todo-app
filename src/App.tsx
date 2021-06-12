@@ -8,8 +8,10 @@ import { ITodo } from './interfaces/TodoInterface';
 
 function App():JSX.Element {
   const [todos, setTodos] = useState(todosData);
+  const [filter, setFilter] = useState('all');
   const idCounter = useRef(0);
   const notCompletedCount = useRef(0);
+
   const addTodo = useCallback(
     (todo:ITodo) => {
       notCompletedCount.current += 1;
@@ -60,6 +62,17 @@ function App():JSX.Element {
     },
     [todos],
   );
+  const filterTodo = useCallback(
+    (filterChoice:string) => {
+      if (filterChoice === 'all') {
+        setFilter('all');
+      } else if (filterChoice === 'active') {
+        setFilter('active');
+      } else {
+        setFilter('completed');
+      }
+    }, [],
+  );
 
   return (
     <>
@@ -69,18 +82,47 @@ function App():JSX.Element {
           <input type="checkbox" id="toggle-all" className="toggle-all" />
           <label htmlFor="toggle-all">Mark all as complete</label>
           <ul className="todo-list">
-            {todos.map((todo) => (
-              <TodoCard
-                key={todo.id}
-                todo={todo}
-                editTodo={editTodo}
-                deleteTodo={deleteTodo}
-                editTodoStatus={editTodoStatus}
-              />
-            ))}
+            {todos.map((todo) => {
+              if (filter === 'all') {
+                return (
+                  <TodoCard
+                    key={todo.id}
+                    todo={todo}
+                    editTodo={editTodo}
+                    deleteTodo={deleteTodo}
+                    editTodoStatus={editTodoStatus}
+                  />
+                );
+              } if (filter === 'active' && todo.isCompleted === false) {
+                return (
+                  <TodoCard
+                    key={todo.id}
+                    todo={todo}
+                    editTodo={editTodo}
+                    deleteTodo={deleteTodo}
+                    editTodoStatus={editTodoStatus}
+                  />
+                );
+              } if (filter === 'completed' && todo.isCompleted === true) {
+                return (
+                  <TodoCard
+                    key={todo.id}
+                    todo={todo}
+                    editTodo={editTodo}
+                    deleteTodo={deleteTodo}
+                    editTodoStatus={editTodoStatus}
+                  />
+                );
+              }
+              return <></>;
+            })}
           </ul>
         </section>
-        <Footer len={notCompletedCount.current} clearCompleted={clearCompleted} />
+        <Footer
+          len={notCompletedCount.current}
+          clearCompleted={clearCompleted}
+          filterTodo={filterTodo}
+        />
       </section>
       <footer className="info">
         <p>Double-click to edit a todo</p>

@@ -3,12 +3,17 @@ import React from 'react';
 interface props{
     len:number;
     clearCompleted: () => void
+    filterTodo: (filterChoice: string) => void;
 }
 
-function Footer({ clearCompleted, len }:props):JSX.Element {
+function Footer({ clearCompleted, len, filterTodo }:props):JSX.Element {
   const handleClearCompleted = ():void => {
     clearCompleted();
   };
+  const handleFilter = (value:string):void => {
+    filterTodo(value);
+  };
+
   return (
     <footer className="footer">
       <span className="todo-count">
@@ -20,13 +25,13 @@ function Footer({ clearCompleted, len }:props):JSX.Element {
       </span>
       <ul className="filters">
         <li>
-          <a href="#/" className="selected">All</a>
+          <a href="#/" onClick={() => handleFilter('all')}>All</a>
         </li>
         <li>
-          <a href="#/active" className="">Active</a>
+          <a href="#/active" onClick={() => handleFilter('active')}>Active</a>
         </li>
         <li>
-          <a href="#/completed" className="">Completed</a>
+          <a href="#/completed" onClick={() => handleFilter('completed')}>Completed</a>
         </li>
       </ul>
       <button type="button" className="clear-completed" onClick={handleClearCompleted}>Clear completed</button>

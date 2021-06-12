@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ITodo } from '../interfaces/TodoInterface';
 
 interface props{
@@ -36,10 +36,18 @@ function TodoCard({
     deleteTodo(todo.id);
   };
 
+  useEffect(() => {
+    if (todo.isCompleted === true) {
+      setState('completed');
+    } else {
+      setState('');
+    }
+  }, [todo]);
+
   return (
     <li key={todo.id} className={state}>
       <div className="view">
-        <input type="checkbox" className="toggle" id="algo" onChange={handleChange} />
+        <input type="checkbox" checked={todo.isCompleted} className="toggle" id="algo" onChange={handleChange} />
         <label onDoubleClick={handleDoubleClick}>
           {' '}
           {todo.name}
