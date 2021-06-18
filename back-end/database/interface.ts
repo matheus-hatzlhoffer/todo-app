@@ -1,12 +1,16 @@
 export type Listener<EventType> = (ev: EventType) => void;
 
-export interface BeforeSetEvent<T> {
-  value: T;
-  newValue: T;
+export interface BeforeChangeEvent<T> {
+  value: T | null;
+  newValue: T | null;
+  method: string;
+  date: Date;
 }
 
-export interface AfterSetEvent<T> {
-  value: T;
+export interface AfterChangeEvent<T> {
+  value: T | null;
+  method: string;
+  date: Date;
 }
 
 export interface Todo {
@@ -23,8 +27,8 @@ export interface Database<T extends BaseRecord> {
   set(newValue: T): number | undefined;
   get(id: number): T | undefined;
 
-  onBeforeAdd(listener: Listener<BeforeSetEvent<T>>): () => void;
-  onAfterAdd(listener: Listener<AfterSetEvent<T>>): () => void;
+  onBeforeChange(listener: Listener<BeforeChangeEvent<T>>): () => void;
+  onAfterChange(listener: Listener<AfterChangeEvent<T>>): () => void;
 
   visit(visitor: (item: T) => void): void;
 }

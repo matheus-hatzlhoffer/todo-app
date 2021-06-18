@@ -1,0 +1,6 @@
+{"newValue":{"isCompleted":false,"value":"Terminar o Todo","id":1},"method":"POST","date":"2021-06-18T21:34:17.778Z"}
+{"newValue":{"isCompleted":false,"value":"Fazer o trabalho de Sistemas Operacionais","id":2},"method":"POST","date":"2021-06-18T21:34:43.920Z"}
+{"newValue":{"isCompleted":false,"value":"Terminar o capítulo do Livro","id":3},"method":"POST","date":"2021-06-18T21:35:07.410Z"}
+{"newValue":{"isCompleted":false,"value":"Terminar o todo-app","id":1},"value":{"isCompleted":false,"value":"Terminar o Todo","id":1},"method":"POST","date":"2021-06-18T21:35:35.514Z"}
+{"newValue":{"isCompleted":true,"value":"Terminar o todo-app","id":1},"value":{"isCompleted":false,"value":"Terminar o todo-app","id":1},"method":"POST","date":"2021-06-18T21:35:50.343Z"}
+{"newValue":null,"value":{"isCompleted":true,"value":"Terminar o todo-app","id":1},"method":"DELETE","date":"2021-06-18T21:36:38.814Z"}

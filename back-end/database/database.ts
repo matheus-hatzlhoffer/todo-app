@@ -1,9 +1,9 @@
 // Database in Memory
 
 import {
-  AfterSetEvent,
+  AfterChangeEvent,
   BaseRecord,
-  BeforeSetEvent,
+  BeforeChangeEvent,
   Database,
   Listener,
 } from "./interface";
@@ -33,8 +33,8 @@ function CreateDatabase<T extends BaseRecord>() {
 
     static instance: InMemoryDatabase = new InMemoryDatabase();
 
-    private beforeAddListeners = createobserver<BeforeSetEvent<T>>();
-    private afterAddListeners = createobserver<AfterSetEvent<T>>();
+    private beforeChangeListeners = createobserver<BeforeChangeEvent<T>>();
+    private afterChangeListeners = createobserver<AfterChangeEvent<T>>();
 
     private constructor() {}
 
@@ -53,35 +53,61 @@ function CreateDatabase<T extends BaseRecord>() {
       }
 
       if (newValue.id) {
-        this.beforeAddListeners.publish({
+        this.beforeChangeListeners.publish({
           newValue,
           value: this.db[newValue.id],
+          method: "POST",
+          date: new Date(),
         });
 
         this.db[newValue.id] = newValue;
       }
 
-      this.afterAddListeners.publish({
+      this.afterChangeListeners.publish({
         value: newValue,
+        method: "Post",
+        date: new Date(),
       });
 
       return newValue.id;
     }
 
     public delete(id: number): void {
+      this.beforeChangeListeners.publish({
+        newValue: null,
+        value: this.db[id],
+        method: "DELETE",
+        date: new Date(),
+      });
       delete this.db[id];
+      this.afterChangeListeners.publish({
+        value: null,
+        method: "Post",
+        date: new Date(),
+      });
     }
 
-    onBeforeAdd(listener: Listener<BeforeSetEvent<T>>): () => void {
-      return this.beforeAddListeners.subscribe(listener);
+    onBeforeChange(listener: Listener<BeforeChangeEvent<T>>): () => void {
+      return this.beforeChangeListeners.subscribe(listener);
     }
-    onAfterAdd(listener: Listener<AfterSetEvent<T>>): () => void {
-      return this.afterAddListeners.subscribe(listener);
+    onAfterChange(listener: Listener<AfterChangeEvent<T>>): () => void {
+      return this.afterChangeListeners.subscribe(listener);
     }
 
     //Visitor execute visitor function to all elements in the database
     visit(visitor: (item: T) => void): void {
+      this.beforeChangeListeners.publish({
+        newValue: null,
+        value: null,
+        method: "PATCH",
+        date: new Date(),
+      });
       Object.values(this.db).forEach(visitor);
+      this.afterChangeListeners.publish({
+        value: null,
+        method: "PATCH",
+        date: new Date(),
+      });
     }
 
     countProprety(scorestrategy: (item: T) => number): {
