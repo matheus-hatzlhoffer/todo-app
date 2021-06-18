@@ -8,7 +8,15 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
+const logger = fs.createWriteStream("database/log.txt", {
+  flags: "a", // 'a' means appending (old data will be preserved)
+});
+
 const TodosDB = CreateDatabase<Todo>();
+const unsubscribeBefore = TodosDB.instance.onBeforeChange((element) => {
+  logger.write(JSON.stringify(element));
+  logger.write("\n");
+});
 
 app.get("/todos", (req, res) => {
   const data = TodosDB.instance.getAll();
@@ -64,5 +72,8 @@ app.patch("/todos", (req, res) => {
 });
 
 app.listen(4000, () => {
+  fs.writeFile("database/log.txt", "", function () {
+    console.log("Logs deleted");
+  });
   console.log("Listening in port 4000 Todos");
 });
